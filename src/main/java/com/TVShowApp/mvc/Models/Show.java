@@ -1,25 +1,34 @@
 package com.TVShowApp.mvc.Models;
 
+//YYYYMMDDhhmmss
 
 public class Show {
 
     private String name;
     private String description;
-    private int showNum;
+    private String icon;
+    private String playTime;
+    private String endTime;
+    private String channel;
 
-    public Show(String name, int showNum, String description) {
+    public Show(){}
+
+    public Show(String name, String icon, String description, String playTime, String endTime, String channel) {
 
         this.name = name;
-        this.showNum = showNum;
+        this.icon = icon;
         this.description = description;
+        this.playTime = playTime;
+        this.endTime = endTime;
+        this.channel = channel;
     }
 
-    public int getShowNum() {
-        return showNum;
+    public String getIcon() {
+        return icon;
     }
 
-    public void setShowNum(int showNum) {
-        this.showNum = showNum;
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getDescription() {
@@ -36,6 +45,30 @@ public class Show {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPlayTime() {
+        return playTime;
+    }
+
+    public void setPlayTime(String playTime) {
+        this.playTime = playTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
 }
