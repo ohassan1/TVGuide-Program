@@ -1,58 +1,107 @@
 <%@ page language="java" %>
-<%@ page import="com.TVShowApp.mvc.Dao.TVDao" %>
-<%@ page import="com.TVShowApp.mvc.Models.Channel" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
-<head><title><h1>${message}</h1></title></head>
+<head><title>${message}<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</title>
+
+</head>
 <body>
 <style>
-    #channels {
+    #Grid {
         line-height: 30px;
         background-color: #eeeeee;
-        height: 800px;
-        width: 100px;
+        height: 2600px;
+        width: 1250px;
+        font-family: Arial,Verdana,Helvetica,sans-serif;
+        font-weight: bold;
         float: left;
         padding: 5px;
     }
 
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: separate;
+    }
+
+    #times {
+        border: 1px solid #4B4C4C;
+        background-color: #E7E7E7;
+        font-family: Arial,Verdana,Helvetica,sans-serif;
+        font-size: 1em;
+        font-weight: 700;
+        color: #4B4C4C;
+        text-align: center;
+    }
+
+    #numbers {
+        color: #039;
+        font-family: "Noto Sans",Arial,Verdana,Helvetica,sans-serif;
+        font-size: 1.2em;
+        font-weight: bold;
+        align: center;
+    }
+    #header {
+        background-color: #039;
+        color: #ffffff;
+        padding: 15px;
+        position: static;
+        width: 100%;
+        position:fixed;
+        margin: auto;
+        z-index: 1;
+    }
 </style>
-<div id="channels">
 
-    <c:forEach items="${chanList}" var="c">
-        <tr>
-            ${c.abbr}<br/>
+<header id="header">
+    <h1>Nife's TV Listings</h1>
+</header>
+
+<div id="Grid" class="container-fluid">
+    <br><br><br><br>
+    <table style="width:100%" align="center" >
+        <tr id="times">
+            <td id="numbers" align="center">Channel</td>
+            <td id="numbers" align="center">#</td>
+            <c:forEach items="${realTimes}" var="time">
+
+                <td id="numbers"><c:out value="${time}" /></td>
+
+            </c:forEach>
         </tr>
-    </c:forEach>
-</div>
+        <c:forEach items="${chanList}" var="channel">
+            <tr>
+                <td align="center"><img src="${channel.icon}" height="35" width="35" ></td>
+                <td id="numbers" align="center">${channel.number}</td>
 
-<div id="shows">
-
-    <table>
-        <c:set var="temp" >${chanName.get(0)}</c:set>
-        <c:forEach items="${showList}" var="s">
-            ${s.name}
-            <c:if test="${!temp.equals(s.channel)}">
-                <c:set var="temp" >${s.channel}</c:set>
-                <c:out value="<br>" default="" escapeXml="false"></c:out>
-            </c:if>
-
+                <c:forEach items="${showList}" var="show">
+                    <c:if test="${show.channel.equals(channel.id)}">
+                        <c:if test="${(show.playTime <= realTimes.get(0)) && (show.endTime > realTimes.get(0))}">
+                            <td id="ShowCells" align="center"><c:out value="${show.name}" /></td>
+                        </c:if>
+                        <c:if test="${(show.playTime <= realTimes.get(1)) && (show.endTime > realTimes.get(1))}">
+                            <td align="center"><c:out value="${show.name}" /></td>
+                        </c:if>
+                        <c:if test="${(show.playTime <= realTimes.get(2)) && (show.endTime > realTimes.get(2))}">
+                            <td align="center"><c:out value="${show.name}" /></td>
+                        </c:if>
+                        <c:if test="${(show.playTime <= realTimes.get(3)) && (show.endTime > realTimes.get(3))}">
+                            <td align="center"><c:out value="${show.name}" /></td>
+                        </c:if>
+                        <c:if test="${(show.playTime <= realTimes.get(4)) && (show.endTime > realTimes.get(4))}">
+                            <td align="center"><c:out value="${show.name}" /></td>
+                        </c:if>
+                        <c:if test="${(show.playTime <= realTimes.get(5)) && (show.endTime > realTimes.get(5))}">
+                            <td align="center"><c:out value="${show.name}" /></td>
+                        </c:if>
+                    </c:if>
+                </c:forEach>
+            </tr>
         </c:forEach>
-
     </table>
 </div>
-
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-    </style>
-    <table style="width:50%">
-        <th>${message}</th>
-        <tr>
-            <td></td>
-        </tr>
-    </table>
 </body>
 </html>

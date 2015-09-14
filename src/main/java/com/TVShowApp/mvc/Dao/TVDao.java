@@ -15,7 +15,9 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TVDao {
 
@@ -45,9 +47,12 @@ public class TVDao {
 
                     NodeList displayNames = e.getElementsByTagName("display-name");
 
+                    String s = e.getElementsByTagName("icon").item(0).getAttributes().getNamedItem("src").toString();
+                    int len = s.length();
+
                     Channel channel = new Channel(displayNames.item(0).getTextContent(),
                             displayNames.item(1).getTextContent(),
-                            displayNames.item(2).getTextContent(), "", e.getAttribute("id"));
+                            displayNames.item(2).getTextContent(), s.substring(5, len - 1), e.getAttribute("id"));
 
                     channelList.add(channel);
                 }
@@ -88,18 +93,62 @@ public class TVDao {
 
                     Element e = (Element) n;
 
-                    show.setPlayTime(e.getAttribute("start"));
-                    show.setEndTime(e.getAttribute("stop"));
-                    show.setChannel(e.getAttribute("channel"));
-                    show.setName(e.getElementsByTagName("title").item(0).getTextContent());
-                    if (e.getElementsByTagName("desc").getLength() >= 1) {
-                        show.setDescription(e.getElementsByTagName("desc").item(0).getTextContent());
-                    }
-                    if (e.getElementsByTagName("icon").getLength() >= 1) {
+                    if (e.getAttribute("start").contains("20150914")) {
 
-                        String s = e.getElementsByTagName("icon").item(0).getAttributes().getNamedItem("src").toString();
-                        int len = s.length();
-                        s = s.substring(5, len -1);
+                        String start = e.getAttribute("start");
+                        int startLen = start.length();
+                        String realStart = start.substring(8, startLen - 8);
+
+                        if (realStart.equals("0000")) {
+                            show.setPlayTime("1200 AM");
+                        } else if (realStart.equals("0030")) {
+                            show.setPlayTime("1230 AM");
+                        } else if (Integer.parseInt(realStart) >= 1300) {
+
+                            int startInt = Integer.parseInt(realStart);
+                            startInt = startInt - 12;
+
+                            show.setPlayTime(Integer.toString(startInt) + " PM");
+                        } else {
+                            show.setPlayTime(realStart + " AM");
+                        }
+
+                        show.setStartTime(Integer.parseInt(show.getPlayTime().substring(0, 4)));
+
+
+                        String stop = e.getAttribute("stop");
+                        int stopLen = stop.length();
+                        String realStop = stop.substring(8, stopLen - 8);
+
+                        if (realStop.equals("0000")) {
+                            show.setEndTime("1200 AM");
+                        } else if (realStop.equals("0030")) {
+                            show.setEndTime("1230 AM");
+                        } else if (Integer.parseInt(realStop) >= 1300) {
+
+                            int stopInt = Integer.parseInt(realStop);
+                            stopInt = stopInt - 12;
+
+                            show.setEndTime("0" + Integer.toString(stopInt) + " PM");
+                        } else {
+                            show.setEndTime(realStop + " AM");
+                        }
+
+                        show.setStopTime(Integer.parseInt(show.getEndTime().substring(0, 4)));
+
+
+                        show.setChannel(e.getAttribute("channel"));
+                        show.setName(e.getElementsByTagName("title").item(0).getTextContent());
+                        if (e.getElementsByTagName("desc").getLength() >= 1) {
+                            show.setDescription(e.getElementsByTagName("desc").item(0).getTextContent());
+                        }
+                        if (e.getElementsByTagName("icon").getLength() >= 1) {
+
+                            String s = e.getElementsByTagName("icon").item(0).getAttributes().getNamedItem("src").toString();
+                            int len = s.length();
+                            s = s.substring(5, len - 1);
+                        }
+
                     }
                 }
 
@@ -117,4 +166,29 @@ public class TVDao {
         return showList;
     }
 
+    public ArrayList<String> currentTime() {
+
+        ArrayList<String> realTimes = new ArrayList<String>();
+
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a");
+
+        int unroundedMinutes = cal.get(Calendar.MINUTE);
+        int mod = unroundedMinutes % 30;
+        cal.add(Calendar.MINUTE, mod == 0 ? 30 : 30 - mod);
+
+        realTimes.add(sdf.format(cal.getTime()));
+        cal.add(Calendar.MINUTE, 30);
+        realTimes.add(sdf.format(cal.getTime()));
+        cal.add(Calendar.MINUTE, 30);
+        realTimes.add(sdf.format(cal.getTime()));
+        cal.add(Calendar.MINUTE, 30);
+        realTimes.add(sdf.format(cal.getTime()));
+        cal.add(Calendar.MINUTE, 30);
+        realTimes.add(sdf.format(cal.getTime()));
+        cal.add(Calendar.MINUTE, 30);
+        realTimes.add(sdf.format(cal.getTime()));
+
+        return realTimes;
+    }
 }

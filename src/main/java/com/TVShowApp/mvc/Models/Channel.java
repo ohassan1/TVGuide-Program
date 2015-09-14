@@ -10,7 +10,7 @@ public class Channel {
     private String id;
 
 
-    public Channel(String name, String abbr, String number, String icon, String idicon) {
+    public Channel(String name, String abbr, String number, String icon, String id) {
         this.name = name;
         this.abbr = abbr;
         this.number = number;

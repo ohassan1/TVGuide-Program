@@ -10,10 +10,12 @@ public class Show {
     private String playTime;
     private String endTime;
     private String channel;
+    private int startTime;
+    private int stopTime;
 
     public Show(){}
 
-    public Show(String name, String icon, String description, String playTime, String endTime, String channel) {
+    public Show(String name, String icon, String description, String playTime, String endTime, String channel, int startTime, int stopTime) {
 
         this.name = name;
         this.icon = icon;
@@ -21,6 +23,8 @@ public class Show {
         this.playTime = playTime;
         this.endTime = endTime;
         this.channel = channel;
+        this.startTime = startTime;
+        this.stopTime = stopTime;
     }
 
     public String getIcon() {
@@ -71,4 +75,19 @@ public class Show {
         this.channel = channel;
     }
 
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public int getStopTime() {
+        return stopTime;
+    }
+
+    public void setStopTime(int stopTime) {
+        this.stopTime = stopTime;
+    }
 }
